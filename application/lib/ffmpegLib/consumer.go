@@ -1,7 +1,6 @@
 package ffmpegLib
 
 import (
-	"ffmpeg-server/lib"
 	"fmt"
 	"github.com/schidstorm/ffmpeg-go-server/application/service"
 	"github.com/sirupsen/logrus"
@@ -44,8 +43,8 @@ func (consumer Consumer) runFFmpeg(model *service.FfmpegTask) {
 	model.StartedAt = time.Now()
 	consumer.db.Updates(model)
 
-	sourceFilePath := path.Join(lib.GetSettings().UploadDestinationDirectory, model.SourceFileName)
-	destinationFilePath := path.Join(lib.GetSettings().ConversionDestinationDirectory, model.DestinationFileName)
+	sourceFilePath := path.Join(GetSettings().UploadDestinationDirectory, model.SourceFileName)
+	destinationFilePath := path.Join(GetSettings().ConversionDestinationDirectory, model.DestinationFileName)
 
 	handler := MultiHandler{
 		handlers: []Handler{

@@ -8,13 +8,13 @@ import (
 )
 
 func main() {
-	app := restframework.LoadApplication(postgres.Open(GetSettings().Dsn))
+	app := restframework.LoadApplication(postgres.Open(ffmpegLib.GetSettings().Dsn))
 
 	app.RegisterModel(service.FfmpegTask{})
 
 	consumer := ffmpegLib.NewConsumer(app.Db)
 	consumer.Run()
 
-	app.Start(GetSettings().HttpListenEndpoint)
+	app.Start(ffmpegLib.GetSettings().HttpListenEndpoint)
 
 }
