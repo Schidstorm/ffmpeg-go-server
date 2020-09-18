@@ -14,6 +14,8 @@ services:
     volumes:
       - /media/hidrive/users/xhq6savpdkk9cruusg9a4najh/movies/:/media/conversion/
       - /home/admin/upload/:/media/upload/
+    secrets:
+      - ffmpeg_db_password
     deploy:
       mode: replicated
       replicas: 1
