@@ -1,0 +1,55 @@
+version: "3.5"
+
+services:
+  ffmpeg-go-server:
+    image: necromant/ffmpeg-go-server
+    hostname: ffmpeg-go-server
+    restart: unless-stopped
+    networks:
+      - public
+      - private
+    environment:
+      - FFMPEG_GO_SERVER_CONVERSION_DESTINATION_DIRECTORY=/media/conversion/
+      - FFMPEG_GO_SERVER_UPLOAD_DESTINATION_DIRECTORY=/media/upload/
+      - FFMPEG_GO_SERVER_PPOSTGRES_HOSTNAME=postgres
+      - FFMPEG_GO_SERVER_PPOSTGRES_DB_NAME=ffmpeg
+      - FFMPEG_GO_SERVER_PPOSTGRES_USERNAME=ffmpeg
+      - FFMPEG_GO_SERVER_PPOSTGRES_PASSWORD_FILE=/run/secrets/ffmpeg_db_password
+    volumes:
+      - /media/hidrive/users/xhq6savpdkk9cruusg9a4najh/movies/:/media/conversion/
+      - /home/admin/upload/:/media/upload/
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: dnsrr
+  postgres:
+    image: postgres
+    hostname: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/ffmpeg_db_password
+      - POSTGRES_USER=ffmpeg
+    networks:
+      - private
+    secrets:
+      - ffmpeg_db_password
+    volumes:
+      - ffmpeg_postgres_data:/var/lib/postgresql/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: dnsrr
+
+
+networks:
+  private:
+  public:
+    external: true
+
+secrets:
+  ffmpeg_db_password:
+    external: true
+
+volumes:
+  ffmpeg_postgres_data:
+    external: true

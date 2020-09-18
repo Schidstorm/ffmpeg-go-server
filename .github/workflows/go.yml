@@ -1,37 +1,74 @@
-name: Go
+# This is a basic workflow to help you get started with Actions
 
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+#force-update
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
+  # This workflow contains a single job called "build"
   build:
-    name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2.1.0
+      - name: get project name
+        uses: jungwinter/split@v1
+        id: split
+        with:
+          msg: ${{ github.repository }}
+          seperator: '/'
 
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v2
-      with:
-        go-version: ^1.13
-      id: go
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
-
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
-
-    - name: Build
-      run: go build -v .
-
-    - name: Test
-      run: go test -v .
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_SECRET }}
+          repository: necromant/${{ steps.split.outputs._1 }}
+          tags: latest
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.1.0
+      - name: get project name
+        uses: jungwinter/split@v1
+        id: split
+        with:
+          msg: ${{ github.repository }}
+          seperator: '/'
+      - name: prepare deploy directory
+        uses: appleboy/ssh-action@v0.0.9
+        with:
+          script: mkdir -p /etc/docker-compose/${{ steps.split.outputs._1 }}
+          host: schidlow.ski
+          port: 1022
+          username: deploy
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy to server
+        id: deploy
+        uses: Pendect/action-rsyncer@v1.1.0
+        env:
+          DEPLOY_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+        with:
+          flags: '-avzr --delete --exclude .git'
+          options: ''
+          ssh_options: '-p 1022'
+          src: 'docker-compose.yml'
+          dest: 'deploy@schidlow.ski:/etc/docker-compose/${{ steps.split.outputs._1 }}'
+      - name: deploy stack
+        uses: appleboy/ssh-action@v0.0.9
+        with:
+          script: |
+            docker stack deploy --compose-file /etc/docker-compose/${{ steps.split.outputs._1 }}/docker-compose.yml ${{ steps.split.outputs._1 }}
+          host: schidlow.ski
+          port: 1022
+          username: deploy
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
