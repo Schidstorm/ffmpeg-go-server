@@ -8,6 +8,6 @@ RUN go install -v ./...
 FROM alpine
 COPY --from=mwader/static-ffmpeg /ffmpeg /usr/bin/ffmpeg
 COPY --from=mwader/static-ffmpeg /ffprobe /usr/bin/ffprobe
-COPY --from=build /go/bin/fmpeg-go-server /usr/bin/fmpeg-go-server
+COPY --from=build /go/bin/application /usr/bin/application
 
-ENTRYPOINT [ "ffmpeg-go-server" ]
+ENTRYPOINT [ "application" ]
