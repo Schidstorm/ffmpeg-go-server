@@ -9,12 +9,12 @@ services:
       - public
       - private
     environment:
-      - FFMPEG_GO_SERVER_CONVERSION_DESTINATION_DIRECTORY=/media/conversion/
-      - FFMPEG_GO_SERVER_UPLOAD_DESTINATION_DIRECTORY=/media/upload/
-      - FFMPEG_GO_SERVER_PPOSTGRES_HOSTNAME=postgres
-      - FFMPEG_GO_SERVER_PPOSTGRES_DB_NAME=ffmpeg
-      - FFMPEG_GO_SERVER_PPOSTGRES_USERNAME=ffmpeg
-      - FFMPEG_GO_SERVER_PPOSTGRES_PASSWORD_FILE=/run/secrets/ffmpeg_db_password
+      - FFMPEG_GO_SERVER_CONVERSIONDESTINATIONDIRECTORY=/media/conversion/
+      - FFMPEG_GO_SERVER_UPLOADDESTINATIONDIRECTORY=/media/upload/
+      - FFMPEG_GO_SERVER_PPOSTGRESHOSTNAME=postgres
+      - FFMPEG_GO_SERVER_PPOSTGRESDB_NAME=ffmpeg
+      - FFMPEG_GO_SERVER_PPOSTGRESUSERNAME=ffmpeg
+      - FFMPEG_GO_SERVER_PPOSTGRESPASSWORDFILE=/run/secrets/ffmpeg_db_password
     volumes:
       - /media/hidrive/users/xhq6savpdkk9cruusg9a4najh/movies/:/media/conversion/
       - /home/admin/upload/:/media/upload/
