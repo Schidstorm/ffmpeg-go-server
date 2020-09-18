@@ -1,8 +1,8 @@
 package ffmpegLib
 
 import (
+	"ffmpeg-server/lib"
 	"fmt"
-	"github.com/schidstorm/ffmpeg-go-server/application/lib"
 	"github.com/schidstorm/ffmpeg-go-server/application/service"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
