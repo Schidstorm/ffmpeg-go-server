@@ -10,7 +10,6 @@ import (
 func main() {
 	app := restframework.LoadApplication(postgres.Open(GetSettings().Dsn))
 
-	app.RegisterModel(service.Todo{})
 	app.RegisterModel(service.FfmpegTask{})
 
 	consumer := ffmpegLib.NewConsumer(app.Db)
