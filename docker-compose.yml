@@ -8,13 +8,9 @@ services:
     networks:
       - public
       - private
-    environment:
-      - FFMPEG_GO_SERVER_CONVERSIONDESTINATIONDIRECTORY=/media/conversion/
-      - FFMPEG_GO_SERVER_UPLOADDESTINATIONDIRECTORY=/media/upload/
-      - FFMPEG_GO_SERVER_PPOSTGRESHOSTNAME=postgres
-      - FFMPEG_GO_SERVER_PPOSTGRESDB_NAME=ffmpeg
-      - FFMPEG_GO_SERVER_PPOSTGRESUSERNAME=ffmpeg
-      - FFMPEG_GO_SERVER_PPOSTGRESPASSWORDFILE=/run/secrets/ffmpeg_db_password
+    configs:
+      - source: ffmpeg_server_config
+        target: /etc/ffmpeg-server/config.yaml
     volumes:
       - /media/hidrive/users/xhq6savpdkk9cruusg9a4najh/movies/:/media/conversion/
       - /home/admin/upload/:/media/upload/
@@ -48,6 +44,10 @@ networks:
 
 secrets:
   ffmpeg_db_password:
+    external: true
+
+configs:
+  ffmpeg_server_config:
     external: true
 
 volumes:
