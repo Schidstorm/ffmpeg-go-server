@@ -1,5 +1,11 @@
 package ffmpegLib
 
+import (
+	"fmt"
+	"github.com/sirupsen/logrus"
+	"reflect"
+)
+
 type MP4TranscoderHandler struct {
 	SourceFilePath      string
 	DestinationFilePath string
@@ -11,6 +17,7 @@ func (h *MP4TranscoderHandler) Progress() float32 {
 }
 
 func (h *MP4TranscoderHandler) Run(progressHandler ProgressListener) error {
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
 	return h.FfmpegMultiHandler.Run(progressHandler)
 }
 

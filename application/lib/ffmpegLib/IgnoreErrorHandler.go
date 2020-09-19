@@ -1,5 +1,11 @@
 package ffmpegLib
 
+import (
+	"fmt"
+	"github.com/sirupsen/logrus"
+	"reflect"
+)
+
 type IgnoreErrorHandler struct {
 	Handler Handler
 }
@@ -9,6 +15,7 @@ func (h *IgnoreErrorHandler) Progress() float32 {
 }
 
 func (h *IgnoreErrorHandler) Run(progressHandler ProgressListener) error {
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
 	_ = h.Handler.Run(progressHandler)
 	return nil
 }

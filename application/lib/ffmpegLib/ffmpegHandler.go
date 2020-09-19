@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os/exec"
+	"reflect"
 	"regexp"
 	"strings"
 	"time"
@@ -31,6 +33,7 @@ func (h *FfmpegHandler) Progress() float32 {
 }
 
 func (h *FfmpegHandler) Run(handler ProgressListener) error {
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
 	cmd := exec.Command("ffmpeg", h.arguments...)
 
 	stdout, err := cmd.StderrPipe()

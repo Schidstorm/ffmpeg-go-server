@@ -1,7 +1,10 @@
 package ffmpegLib
 
 import (
+	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
+	"reflect"
 )
 
 type RemoveHandler struct {
@@ -13,6 +16,7 @@ func (h *RemoveHandler) Progress() float32 {
 }
 
 func (h *RemoveHandler) Run(progressHandler ProgressListener) error {
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
 	return os.Remove(h.FilePath)
 }
 

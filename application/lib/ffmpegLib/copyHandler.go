@@ -1,8 +1,11 @@
 package ffmpegLib
 
 import (
+	"fmt"
+	"github.com/sirupsen/logrus"
 	"io"
 	"os"
+	"reflect"
 )
 
 type CopyHandler struct {
@@ -15,6 +18,7 @@ func (h *CopyHandler) Progress() float32 {
 }
 
 func (h *CopyHandler) Run(progressHandler ProgressListener) error {
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
 	source, err := os.OpenFile(h.SourceFilePath, os.O_RDONLY, 0)
 	if err != nil {
 		return err
