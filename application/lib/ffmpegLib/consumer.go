@@ -44,6 +44,7 @@ func (consumer Consumer) runFFmpeg(model *service.FfmpegTask) {
 	consumer.db.Updates(model)
 
 	sourceFilePath := path.Join(GetSettings().UploadDestinationDirectory, model.SourceFileName)
+	tempFilePath := path.Join(GetSettings().TempDirectory, model.DestinationFileName)
 	destinationFilePath := path.Join(GetSettings().ConversionDestinationDirectory, model.DestinationFileName)
 
 	handler := MultiHandler{
@@ -53,7 +54,9 @@ func (consumer Consumer) runFFmpeg(model *service.FfmpegTask) {
 				"-c:v", "libvpx-vp9", "-pass", "1", "-b:v", "1000K", "-threads", "1", "-speed", "4", "-tile-columns", "0", "-frame-parallel", "0", "-auto-alt-ref", "1", "-lag-in-frames", "25", "-g", "9999", "-aq-mode", "0", "-an", "-f", "webm", os.DevNull),
 			NewFfmpegHandler(
 				"-y", "-re", "-hide_banner", "-progress", "pipe:2", "-i", sourceFilePath,
-				"-c:v", "libvpx-vp9", "-pass", "2", "-b:v", "1000K", "-threads", "1", "-speed", "0", "-tile-columns", "0", "-frame-parallel", "0", "-auto-alt-ref", "1", "-lag-in-frames", "25", "-g", "9999", "-aq-mode", "0", "-c:a", "libopus", "-b:a", "64k", "-f", "webm", destinationFilePath),
+				"-c:v", "libvpx-vp9", "-pass", "2", "-b:v", "1000K", "-threads", "1", "-speed", "0", "-tile-columns", "0", "-frame-parallel", "0", "-auto-alt-ref", "1", "-lag-in-frames", "25", "-g", "9999", "-aq-mode", "0", "-c:a", "libopus", "-b:a", "64k", "-f", "webm", tempFilePath),
+			NewCopyHandler(tempFilePath, destinationFilePath),
+			NewRemoveHandler(tempFilePath),
 		},
 	}
 	err := handler.Run(func(progress float32) {

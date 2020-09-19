@@ -11,6 +11,7 @@ import (
 type Settings struct {
 	ConversionDestinationDirectory string
 	UploadDestinationDirectory     string
+	TempDirectory                  string
 	HttpListenEndpoint             string
 	Dsn                            string
 }
@@ -37,6 +38,7 @@ func initSettings() *Settings {
 		ConversionDestinationDirectory: viper.GetString("ConversionDestinationDirectory"),
 		UploadDestinationDirectory:     viper.GetString("UploadDestinationDirectory"),
 		HttpListenEndpoint:             viper.GetString("HttpListenEndpoint"),
+		TempDirectory:                  viper.GetString("TempDirectory"),
 		Dsn: fmt.Sprintf(
 			"host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Europe/Berlin",
 			viper.GetString("PostgresHostname"),
@@ -51,6 +53,7 @@ func initSettings() *Settings {
 func loadConfigFile(homePath string) {
 	viper.SetDefault("ConversionDestinationDirectory", homePath)
 	viper.SetDefault("UploadDestinationDirectory", homePath)
+	viper.SetDefault("TempDirectory", homePath)
 	viper.SetDefault("HttpListenEndpoint", "0.0.0.0:8080")
 	viper.SetDefault("PostgresUsername", "ffmpeg")
 	viper.SetDefault("PostgresHostname", "localhost")
