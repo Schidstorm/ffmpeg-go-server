@@ -5,7 +5,6 @@ import (
 	"github.com/schidstorm/ffmpeg-go-server/application/service"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"os"
 	"path"
 	"time"
 )
@@ -49,12 +48,7 @@ func (consumer Consumer) runFFmpeg(model *service.FfmpegTask) {
 
 	handler := MultiHandler{
 		handlers: []Handler{
-			NewFfmpegHandler(
-				"-y", "-re", "-hide_banner", "-progress", "pipe:2", "-i", sourceFilePath,
-				"-c:v", "libvpx-vp9", "-pass", "1", "-b:v", "1000K", "-threads", "6", "-speed", "4", "-tile-columns", "0", "-frame-parallel", "0", "-auto-alt-ref", "1", "-lag-in-frames", "25", "-g", "9999", "-aq-mode", "0", "-an", "-f", "webm", os.DevNull),
-			NewFfmpegHandler(
-				"-y", "-re", "-hide_banner", "-progress", "pipe:2", "-i", sourceFilePath,
-				"-c:v", "libvpx-vp9", "-pass", "2", "-b:v", "1000K", "-threads", "6", "-speed", "0", "-tile-columns", "0", "-frame-parallel", "0", "-auto-alt-ref", "1", "-lag-in-frames", "25", "-g", "9999", "-aq-mode", "0", "-c:a", "libopus", "-b:a", "64k", "-f", "webm", tempFilePath),
+			NewMP4TranscoderHandler(sourceFilePath, tempFilePath),
 			NewIgnoreErrorHandler(NewRemoveHandler(destinationFilePath)),
 			NewCopyHandler(tempFilePath, destinationFilePath),
 			NewRemoveHandler(tempFilePath),
