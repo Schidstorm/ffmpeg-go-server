@@ -14,6 +14,7 @@ services:
     volumes:
       - /media/hidrive/users/xhq6savpdkk9cruusg9a4najh/movies/:/media/conversion/
       - /home/admin/upload/:/media/upload/
+      - ffmpeg_server_temp:/media/temp/
     secrets:
       - ffmpeg_db_password
     deploy:
@@ -54,4 +55,6 @@ configs:
 
 volumes:
   ffmpeg_postgres_data:
+    external: true
+  ffmpeg_server_temp:
     external: true
