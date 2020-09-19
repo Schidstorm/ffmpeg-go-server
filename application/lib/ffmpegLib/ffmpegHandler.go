@@ -52,6 +52,7 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 	lastProgressionTime := h.progressionTime
 	for scanner.Scan() {
 		dataString := scanner.Text()
+		logrus.Infoln(dataString)
 		completeStdout += dataString + "\n"
 		if duration, err := FindLastDuration(dataString, "Duration: ?"); err == nil {
 			h.totalDuration = duration
