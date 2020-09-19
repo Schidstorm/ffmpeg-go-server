@@ -74,6 +74,11 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 		}
 	}
 
+	err = scanner.Err()
+	if err != nil {
+		return err
+	}
+
 	logrus.Infoln("Waiting for Finish")
 	err = cmd.Wait()
 	if err != nil {
