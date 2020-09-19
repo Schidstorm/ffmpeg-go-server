@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
+	"io"
+	"io/ioutil"
 	"os/exec"
 	"reflect"
 	"regexp"
@@ -36,17 +38,22 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	cmd := exec.Command("ffmpeg", h.arguments...)
 
-	stdout, err := cmd.StderrPipe()
+	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		return err
 	}
+
+	go func() {
+		stdin, _ := cmd.StdoutPipe()
+		io.Copy(ioutil.Discard, stdin)
+	}()
 
 	err = cmd.Start()
 	if err != nil {
 		return err
 	}
 
-	scanner := bufio.NewScanner(stdout)
+	scanner := bufio.NewScanner(stderr)
 	scanner.Split(bufio.ScanLines)
 	completeStdout := ""
 	lastProgressionTime := h.progressionTime
