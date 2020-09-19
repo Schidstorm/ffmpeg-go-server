@@ -53,7 +53,9 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 		return err
 	}
 
+	scannerBuffer := make([]byte, 1024*1024*100)
 	scanner := bufio.NewScanner(stderr)
+	scanner.Buffer(scannerBuffer, len(scannerBuffer)-100)
 	scanner.Split(bufio.ScanLines)
 	completeStdout := ""
 	lastProgressionTime := h.progressionTime
