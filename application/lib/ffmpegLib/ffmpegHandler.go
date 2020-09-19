@@ -74,6 +74,7 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 		}
 	}
 
+	logrus.Infoln("Waiting for Finish")
 	err = cmd.Wait()
 	if err != nil {
 		return errors.New(fmt.Sprintf("%s: %s", err, completeStdout))
