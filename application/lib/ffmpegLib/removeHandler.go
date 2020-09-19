@@ -16,7 +16,7 @@ func (h *RemoveHandler) Progress() float32 {
 }
 
 func (h *RemoveHandler) Run(progressHandler ProgressListener) error {
-	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	return os.Remove(h.FilePath)
 }
 

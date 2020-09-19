@@ -33,7 +33,7 @@ func (h *FfmpegHandler) Progress() float32 {
 }
 
 func (h *FfmpegHandler) Run(handler ProgressListener) error {
-	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	cmd := exec.Command("ffmpeg", h.arguments...)
 
 	stdout, err := cmd.StderrPipe()

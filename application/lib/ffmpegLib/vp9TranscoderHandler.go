@@ -18,7 +18,7 @@ func (h *VP9TranscoderHandler) Progress() float32 {
 }
 
 func (h *VP9TranscoderHandler) Run(progressHandler ProgressListener) error {
-	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	return h.FfmpegMultiHandler.Run(progressHandler)
 }
 

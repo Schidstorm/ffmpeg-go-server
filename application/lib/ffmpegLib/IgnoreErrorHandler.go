@@ -15,7 +15,7 @@ func (h *IgnoreErrorHandler) Progress() float32 {
 }
 
 func (h *IgnoreErrorHandler) Run(progressHandler ProgressListener) error {
-	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	_ = h.Handler.Run(progressHandler)
 	return nil
 }

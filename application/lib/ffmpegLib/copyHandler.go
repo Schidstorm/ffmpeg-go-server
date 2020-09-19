@@ -18,7 +18,7 @@ func (h *CopyHandler) Progress() float32 {
 }
 
 func (h *CopyHandler) Run(progressHandler ProgressListener) error {
-	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	source, err := os.OpenFile(h.SourceFilePath, os.O_RDONLY, 0)
 	if err != nil {
 		return err

@@ -17,7 +17,7 @@ func (h *MultiHandler) Progress() float32 {
 }
 
 func (h *MultiHandler) Run(progressHandler ProgressListener) error {
-	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	for index, handler := range h.handlers {
 		h.currentHandlerIndex = index
 		err := handler.Run(progressHandler)

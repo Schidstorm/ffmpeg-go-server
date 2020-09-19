@@ -17,7 +17,7 @@ func (h *MP4TranscoderHandler) Progress() float32 {
 }
 
 func (h *MP4TranscoderHandler) Run(progressHandler ProgressListener) error {
-	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).Name()))
+	logrus.Infoln(fmt.Sprintf("Starting %s", reflect.TypeOf(h).String()))
 	return h.FfmpegMultiHandler.Run(progressHandler)
 }
 
