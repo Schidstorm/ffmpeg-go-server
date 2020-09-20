@@ -2,6 +2,7 @@ package ffmpegLib
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
@@ -56,7 +57,7 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 	scannerBuffer := make([]byte, 1024*1024*100)
 	scanner := bufio.NewScanner(stderr)
 	scanner.Buffer(scannerBuffer, len(scannerBuffer)-100)
-	scanner.Split(bufio.ScanLines)
+	scanner.Split(ScanLines)
 	completeStdout := ""
 	lastProgressionTime := h.progressionTime
 	for scanner.Scan() {
@@ -88,6 +89,28 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 	}
 
 	return nil
+}
+
+func ScanLines(data []byte, atEOF bool) (advance int, token []byte, err error) {
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+	nl := bytes.IndexByte(data, '\n')
+	cr := bytes.IndexByte(data, '\r')
+	if nl >= 0 && (nl < cr && cr >= 0 || cr < 0) {
+		// We have a full newline-terminated line.
+		return nl + 1, data[0:nl], nil
+	}
+	if cr >= 0 && (cr <= nl && nl >= 0 || nl < 0) {
+		// We have a full newline-terminated line.
+		return cr + 1, data[0:cr], nil
+	}
+	// If we're at EOF, we have a final, non-terminated line. Return it.
+	if atEOF {
+		return len(data), data, nil
+	}
+	// Request more data.
+	return 0, nil, nil
 }
 
 func FindLastDuration(haystack, pattern string) (time.Duration, error) {
