@@ -52,6 +52,7 @@ func (consumer Consumer) runFFmpeg(model *service.FfmpegTask) {
 			NewIgnoreErrorHandler(NewRemoveHandler(destinationFilePath)),
 			NewCopyHandler(tempFilePath, destinationFilePath),
 			NewRemoveHandler(tempFilePath),
+			NewRemoveHandler(sourceFilePath),
 		},
 	}
 	err := handler.Run(func(progress float32) {

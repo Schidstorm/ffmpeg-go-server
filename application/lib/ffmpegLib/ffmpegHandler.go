@@ -69,6 +69,8 @@ func (h *FfmpegHandler) Run(handler ProgressListener) error {
 		}
 		if t, err := FindLastDuration(dataString, "out_time=?"); err == nil {
 			h.progressionTime = t
+		} else if t, err := FindLastDuration(dataString, "time=?"); err == nil {
+			h.progressionTime = t
 		}
 
 		if lastProgressionTime != h.progressionTime {
