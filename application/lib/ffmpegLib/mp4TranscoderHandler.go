@@ -26,7 +26,7 @@ func NewMP4TranscoderHandler(sourceDirectory, destinationDirectory string) *MP4T
 		SourceFilePath:      sourceDirectory,
 		DestinationFilePath: destinationDirectory,
 		FfmpegMultiHandler: NewMultiHandler(
-			NewFfmpegHandler("-y", "-i", sourceDirectory, "-vcodec", "h264", "-acodec", "aac", "-strict", "-2", destinationDirectory),
+			NewFfmpegHandler("-y", "-i", sourceDirectory, "-vcodec", "h264", "-acodec", "aac", "-strict", "1", destinationDirectory),
 		),
 	}
 }
